@@ -1,10 +1,37 @@
+body:before, body:after {
+  content: "";
+  position: fixed;
+  background-image: linear-gradient(#F4F4F5, #CECDCE);
+  left: 0;
+  right: 0;
+}
+
+body:before {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  box-shadow: 0 4px 2px 0 #CECDCE;
+  height: 20px;
+  top: 0;
+}
+body:after {
+  bottom: 0;
+  height: 1px;
+}
+
 body {
+  color : white;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(to right, #CECECF 1px, transparent 1px, transparent calc(100% - 1px), #CECECF calc(100% - 1px)) no-repeat fixed;
+  background-position: 0 10px;
+  background-color: black;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+
 }
 
 code {

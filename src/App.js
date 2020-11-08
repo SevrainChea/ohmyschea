@@ -1,57 +1,127 @@
-import React, { useState } from "react";
-import Input from "./Input";
-import "./App.css";
+import React, { useReducer, useRef } from "react";
+import AppHeader from "./AppHeader";
+import MeContainer from "./MeContainer";
+
+const clearCommand = () => ({ history: [], outputs: [] });
+const historyCommand = ({ newHistory, newOutputs }) => ({
+  history: newHistory,
+  outputs: [...newOutputs, <div>{mapArray(newHistory, true)}</div>],
+});
+const lsCommand = ({ newHistory, newOutputs }) => ({
+  history: newHistory,
+  outputs: [
+    ...newOutputs,
+    <div>{Array.from(commandsMap.keys()).join(", ")}</div>,
+  ],
+});
+const meCommand = ({ newHistory, newOutputs }) => ({
+  history: newHistory,
+  outputs: [...newOutputs, <MeContainer />],
+});
+const contactCommand = ({ newHistory, newOutputs }) => ({
+  history: newHistory,
+  outputs: [
+    ...newOutputs,
+    <a href="mailto:sevrain.chea@gmail.com">sevrain.chea@gmail.com</a>,
+  ],
+});
+const unknownCommand = ({ newHistory, newOutputs, command }) => ({
+  history: newHistory,
+  outputs: [...newOutputs, <span>{command} : Unknown command</span>],
+});
+
+const commandsMap = new Map([
+  ["clear", clearCommand],
+  ["history", historyCommand],
+  ["ls", lsCommand],
+  ["me", meCommand],
+  ["contact", contactCommand],
+]);
+
+const reducer = (state, action) => {
+  const { command, input } = action;
+  const { history, outputs } = state;
+
+  if (input || !command) {
+    return {
+      userInput: input,
+      history: history,
+      outputs: outputs,
+    };
+  }
+
+  const newOutputs = [...outputs, <OutputContainer command={command} />];
+  const newHistory = [...history, command];
+
+  const args = { newOutputs, newHistory, command };
+
+  const commandFunction = commandsMap.get(command) || unknownCommand;
+
+  console.log(commandFunction);
+
+  return { userInput: "", ...commandFunction(args) };
+};
+
+const mapArray = (array, showIndex = false) =>
+  array.map((item, index) => (
+    <div key={index}>
+      {showIndex && index + 1} {item}
+    </div>
+  ));
+
+const UserName = () => <span className="userName">→ ohmyschea ~ </span>;
+
+const OutputContainer = ({ command }) => (
+  <div className="input-container">
+    <UserName /> <span>{command}</span>
+  </div>
+);
 
 const App = () => {
-  // TODO : type input
-  const [inputs, setInputs] = useState([]);
-  const [userInput, setUserInput] = useState("");
-  const [history, setHistory] = useState([]);
-
-  const addInput = (input) => {
-    setInputs([...inputs, <Input />]);
+  const initialState = {
+    userInput: "",
+    outputs: [],
+    history: [],
   };
 
-  const test = () => {
-    console.log("coucou");
-    setInputs([...inputs, <Input />]);
-  };
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const handleUserInputChange = (e) => {
-    setUserInput(e.target.value);
+    dispatch({ input: e.target.value });
   };
 
   const handleOnKeyUp = (e) => {
-    if(e.keyCode === 13) {
-      console.log(e.target.value)
-      setInputs([...inputs, <Input />]);
-    }
-  }
+    const command = e.target.value;
 
-  const previousInputs = inputs.map((input, index) => (
-    <div key={index}>Hello {index}</div>
-  ));
+    if (e.keyCode === 13 && command) {
+      dispatch({ command: command });
+    }
+  };
+
+  const commandInput = useRef();
+
+  const focusCommandInput = () => commandInput.current.focus();
+
+  const outputsMap = mapArray(state.outputs);
 
   return (
     <div className="App">
-      <div className="App-header">
-        <div className="button-bar">
-          <span className="but red"></span>
-          <span className="but yellow"></span>
-          <span className="but green"></span>
-        </div>
-        <span className="term-name">Header Title</span>
-      </div>
+      <AppHeader />
       <div className="container">
-      {previousInputs}
-        <input
-          name="userInput"
-          value={userInput}
-          onKeyUp={handleOnKeyUp}
-          onChange={handleUserInputChange}
-          onSubmit={test}
-        ></input>
-        <button onClick={test}>Add</button>
+        {outputsMap}
+        <div className="input-container">
+          <UserName />
+          <input
+            autoFocus={true}
+            ref={commandInput}
+            onBlur={focusCommandInput}
+            autoComplete="off"
+            name="userInput"
+            value={state.userInput}
+            onKeyUp={handleOnKeyUp}
+            onChange={handleUserInputChange}
+          ></input>
+        </div>
       </div>
     </div>
   );

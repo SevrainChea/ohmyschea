@@ -12,6 +12,12 @@
        url('./fonts/source-code-pro-v13-latin-600.svg#SourceCodePro') format('svg'); /* Legacy iOS */
 }
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body:before,
 body:after {
   content: "";

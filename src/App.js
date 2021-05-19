@@ -1,6 +1,9 @@
 import React, { useReducer, useRef } from "react";
-import AppHeader from "./AppHeader";
-import MeContainer from "./MeContainer";
+import AppHeader from "./components/AppHeader";
+import MeContainer from "./components/MeContainer";
+import UserName from "./components/UserName";
+import OutputContainer from "./components/OutputContainer";
+import Ascii from "./components/Ascii";
 
 const clearCommand = () => ({ history: [], outputs: [] });
 const historyCommand = ({ newHistory, newOutputs }) => ({
@@ -57,8 +60,6 @@ const reducer = (state, action) => {
 
   const commandFunction = commandsMap.get(command) || unknownCommand;
 
-  console.log(commandFunction);
-
   return { userInput: "", ...commandFunction(args) };
 };
 
@@ -68,14 +69,6 @@ const mapArray = (array, showIndex = false) =>
       {showIndex && index + 1} {item}
     </div>
   ));
-
-const UserName = () => <span className="userName">→ ohmyschea ~ </span>;
-
-const OutputContainer = ({ command }) => (
-  <div className="input-container">
-    <UserName /> <span>{command}</span>
-  </div>
-);
 
 const App = () => {
   const initialState = {
@@ -108,6 +101,7 @@ const App = () => {
     <div className="App">
       <AppHeader />
       <div className="container">
+        <Ascii />
         {outputsMap}
         <div className="input-container">
           <UserName />

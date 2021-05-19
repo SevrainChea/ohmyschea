@@ -5,7 +5,7 @@ const AppHeader = () => (
       <span className="but yellow"></span>
       <span className="but green"></span>
     </div>
-    <span className="term-name">Header Title</span>
+    <span className="term-name">Sévrain CHEA</span>
   </div>
 );
 

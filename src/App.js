@@ -3,7 +3,7 @@ import AppHeader from "./components/AppHeader";
 import MeContainer from "./components/MeContainer";
 import UserName from "./components/UserName";
 import OutputContainer from "./components/OutputContainer";
-import Ascii from "./components/Ascii";
+import Intro from "./components/Intro";
 
 const clearCommand = () => ({ history: [], outputs: [] });
 const historyCommand = ({ newHistory, newOutputs }) => ({
@@ -28,6 +28,33 @@ const contactCommand = ({ newHistory, newOutputs }) => ({
     <a href="mailto:sevrain.chea@gmail.com">sevrain.chea@gmail.com</a>,
   ],
 });
+const socialCommand = ({ newHistory, newOutputs }) => ({
+  history: newHistory,
+  outputs: [
+    ...newOutputs,
+    <a
+      href="https://www.linkedin.com/in/sevrainchea/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Linkedin
+    </a>,
+    <a
+      href="https://github.com/SevrainChea"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Github
+    </a>,
+    <a
+      href="https://sevrain-chea.medium.com/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Medium
+    </a>,
+  ],
+});
 const unknownCommand = ({ newHistory, newOutputs, command }) => ({
   history: newHistory,
   outputs: [...newOutputs, <span>{command} : Unknown command</span>],
@@ -39,6 +66,7 @@ const commandsMap = new Map([
   ["ls", lsCommand],
   ["me", meCommand],
   ["contact", contactCommand],
+  ["social", socialCommand],
 ]);
 
 const reducer = (state, action) => {
@@ -101,7 +129,7 @@ const App = () => {
     <div className="App">
       <AppHeader />
       <div className="container">
-        <Ascii />
+        <Intro />
         {outputsMap}
         <div className="input-container">
           <UserName />
